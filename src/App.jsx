@@ -1,11 +1,13 @@
 import { MyRoutes, Sidebar, Device, Light, Dark, AuthContextProvider, MenuBurger } from "./index";
 import { createContext, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { styled, ThemeProvider } from "styled-components";
 // import { ReactQueryDevtools } from "react-query/devtools";
 
 export const ThemeContext = createContext(null);
 
 function App() {
+  const { pathname } = useLocation();
   const [theme, setTheme] = useState("light");
   const themeStyle = theme === "light" ? Light : Dark;
   const [ sidebarOpen, setSidebarOpen ] = useState(false);
@@ -15,17 +17,24 @@ function App() {
       <ThemeContext.Provider value={{setTheme, theme}}>
         <ThemeProvider theme={themeStyle}>
           <AuthContextProvider>
-            <Container className={ sidebarOpen?"active":"" }>
-              <div className="contentSidebar">
-              <Sidebar state={ sidebarOpen } setState={ setSidebarOpen }/>
-              </div>
-              <div className="contentMenuBurger">
-                <MenuBurger/>
-              </div>
-              <ContainerBody>
+            {
+              pathname != "/login" ? (
+                <Container className={ sidebarOpen?"active":"" }>
+                <div className="contentSidebar">
+                <Sidebar state={ sidebarOpen } setState={ setSidebarOpen }/>
+                </div>
+                <div className="contentMenuBurger">
+                  <MenuBurger/>
+                </div>
+                <ContainerBody>
+                  <MyRoutes />
+                </ContainerBody>
+              </Container>
+              ) : (
                 <MyRoutes />
-              </ContainerBody>
-            </Container>
+              )
+            }
+            
             {/* <ReactQueryDevtools initialIsOpen={false} /> */}
           </AuthContextProvider>
         </ThemeProvider>
