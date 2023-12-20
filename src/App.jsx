@@ -1,20 +1,44 @@
-import { MyRoutes, Sidebar, Device, Light, Dark, AuthContextProvider, MenuBurger } from "./index";
+import { MyRoutes, Sidebar, Device, Light, Dark, AuthContextProvider, MenuBurger, useUsuariosStore } from "./index";
 import { createContext, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { styled, ThemeProvider } from "styled-components";
-// import { ReactQueryDevtools } from "react-query/devtools";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { useQuery } from "@tanstack/react-query";
 
 export const ThemeContext = createContext(null);
 
 function App() {
+
+  const { mostrarUsuarios, datausuarios } = useUsuariosStore();
+
   const { pathname } = useLocation();
-  const [theme, setTheme] = useState("light");
+
+  // const [theme, setTheme] = useState("dark");
+  const theme = datausuarios?.tema === "0" ? "light" : "dark";
   const themeStyle = theme === "light" ? Light : Dark;
+
   const [ sidebarOpen, setSidebarOpen ] = useState(false);
+
+  const { isLoading, error } = useQuery({ queryKey: ["mostrar usuarios"], queryFn: () => mostrarUsuarios()} );
+
+  if (isLoading){
+    return (
+      <div>
+        cargando...
+      </div>
+    )
+  }
+  if (error) {
+    return (
+      <div>
+        error...
+      </div>
+    )
+  }
 
   return (
     <>
-      <ThemeContext.Provider value={{setTheme, theme}}>
+      <ThemeContext.Provider value={{theme}}>
         <ThemeProvider theme={themeStyle}>
           <AuthContextProvider>
             {
@@ -35,7 +59,7 @@ function App() {
               )
             }
             
-            {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+            <ReactQueryDevtools initialIsOpen={true} />
           </AuthContextProvider>
         </ThemeProvider>
       </ThemeContext.Provider>

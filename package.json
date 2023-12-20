@@ -11,11 +11,15 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.39.0",
+    "@tanstack/react-query": "^5.14.2",
+    "@tanstack/react-query-devtools": "^5.14.2",
+    "iso-country-currency": "^0.7.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.12.0",
     "react-router-dom": "^6.20.0",
     "styled-components": "^6.1.1",
+    "sweetalert2": "^11.10.1",
     "zustand": "^4.4.7"
   },
   "devDependencies": {
